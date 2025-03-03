@@ -53,7 +53,7 @@ app.get('/actividades', (req, res) => {
     res.json(results);
   });
 });
-
+// agregar
 app.post('/actividades', (req, res) => {
   const { UsuarioID, ProyectoID, TipoActividadID, Descripcion, Minutos, Fecha, EquipoID } = req.body;
   const query = `
@@ -67,6 +67,28 @@ app.post('/actividades', (req, res) => {
     res.json({ message: '✅ Actividad agregada', id: results.insertId });
   });
 });
+
+
+// eliminar 
+
+app.delete('/actividades/:id', (req, res) => {
+  const { id } = req.params;
+  const query = 'DELETE FROM Actividad WHERE ActividadID = ?';
+
+  connection.query(query, [id], (err, results) => {
+    if (err) {
+      console.error('❌ Error al eliminar actividad:', err);
+      return res.status(500).json({ error: 'Error al eliminar actividad' });
+    }
+
+    if (results.affectedRows === 0) {
+      return res.status(404).json({ error: '⚠️ Actividad no encontrada' });
+    }
+
+    res.json({ message: '✅ Actividad eliminada correctamente' });
+  });
+});
+
 
 // Rutas - Usuarios
 app.get('/usuarios', (req, res) => {
